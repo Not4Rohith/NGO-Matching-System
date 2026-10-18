@@ -10,8 +10,8 @@ export default function RatingsSection({ ratings, ngos, onAddRating }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!userName || !reviewText) {
-      alert('Please enter your name and review.');
+    if (!userName.trim() || !reviewText.trim()) {
+      alert('Please enter your name and review comments.');
       return;
     }
 
@@ -22,57 +22,55 @@ export default function RatingsSection({ ratings, ngos, onAddRating }) {
       await onAddRating({
         ngoId: String(selectedNGOId),
         ngoName: selectedNGO?.name || 'Verified NGO',
-        userName,
+        userName: userName.trim(),
         rating: ratingVal,
-        review: reviewText
+        review: reviewText.trim()
       });
       setShowForm(false);
       setUserName('');
       setReviewText('');
       setRatingVal(5);
     } catch (err) {
-      alert('Failed to submit review: ' + err.message);
+      alert('Error submitting feedback: ' + err.message);
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <div className="ratings-section-container">
-      <div className="section-header">
-        <h2>Community Ratings & Impact Reviews</h2>
-        <p>
-          Real stories and verified feedback from citizens and coordinators served by our partner NGOs.
-        </p>
+    <div className="section-container">
+      <div className="section-header-block">
+        <h2>Community Reviews & Performance Ratings</h2>
+        <p>Verified feedback and mission ratings from citizens, community coordinators, and partner organizations.</p>
       </div>
 
-      <div className="ratings-top-bar">
-        <div className="summary-stars">
-          <span className="big-rating-number">4.8</span>
+      <div className="ratings-header-bar">
+        <div className="rating-summary-group">
+          <div className="big-rating-score">4.9</div>
           <div>
-            <div className="stars-row">★★★★★</div>
-            <span className="rating-count-label">Based on {ratings.length} community reviews</span>
+            <div className="stars-gold-row">★★★★★</div>
+            <div className="rating-count-subtitle">{ratings.length} Community Ratings Recorded</div>
           </div>
         </div>
 
         <button
           type="button"
-          className="btn-primary"
+          className="btn-primary-green"
           onClick={() => setShowForm(!showForm)}
         >
-          {showForm ? '✕ Close Review Form' : '✍️ Write a Community Review'}
+          {showForm ? 'Cancel' : 'Submit a Review'}
         </button>
       </div>
 
       {showForm && (
-        <form className="write-review-card" onSubmit={handleSubmit}>
-          <h3>Write a Feedback Review for an NGO</h3>
+        <form className="pro-review-form" onSubmit={handleSubmit}>
+          <h3>Submit an NGO Evaluation Review</h3>
 
-          <div className="form-row-2">
-            <div className="form-group">
-              <label>Select Organization:</label>
+          <div className="form-columns-2">
+            <div className="form-field">
+              <label>Select Organization *</label>
               <select
-                className="form-select"
+                className="input-control select-control"
                 value={selectedNGOId}
                 onChange={e => setSelectedNGOId(e.target.value)}
               >
@@ -84,12 +82,12 @@ export default function RatingsSection({ ratings, ngos, onAddRating }) {
               </select>
             </div>
 
-            <div className="form-group">
-              <label>Your Name:</label>
+            <div className="form-field">
+              <label>Your Name *</label>
               <input
                 type="text"
-                className="form-input"
-                placeholder="e.g., Priya Patel"
+                className="input-control"
+                placeholder="Full name or organization"
                 value={userName}
                 onChange={e => setUserName(e.target.value)}
                 required
@@ -97,29 +95,29 @@ export default function RatingsSection({ ratings, ngos, onAddRating }) {
             </div>
           </div>
 
-          <div className="form-group">
-            <label>Rating (1 to 5 Stars):</label>
-            <div className="star-picker-row">
+          <div className="form-field">
+            <label>Rating (1 to 5 Stars) *</label>
+            <div className="star-selection-row">
               {[1, 2, 3, 4, 5].map(star => (
                 <button
                   key={star}
                   type="button"
-                  className={`star-pick-btn ${ratingVal >= star ? 'active' : ''}`}
+                  className={`star-select-btn ${ratingVal >= star ? 'active' : ''}`}
                   onClick={() => setRatingVal(star)}
                 >
                   ★
                 </button>
               ))}
-              <span className="star-val-text">{ratingVal} / 5 Stars</span>
+              <span className="star-selection-label">{ratingVal} of 5 Stars</span>
             </div>
           </div>
 
-          <div className="form-group">
-            <label>Your Feedback / Experience:</label>
+          <div className="form-field">
+            <label>Review & Feedback Details *</label>
             <textarea
-              className="form-textarea"
+              className="input-control textarea-control"
               rows="3"
-              placeholder="Tell others how this NGO assisted you or your community during the emergency..."
+              placeholder="Describe the speed of response, quality of supplies, or assistance provided..."
               value={reviewText}
               onChange={e => setReviewText(e.target.value)}
               required
@@ -128,29 +126,27 @@ export default function RatingsSection({ ratings, ngos, onAddRating }) {
 
           <button
             type="submit"
-            className="btn-primary"
+            className="btn-primary-green"
             disabled={submitting}
           >
-            {submitting ? 'Submitting Review...' : 'Submit Feedback'}
+            {submitting ? 'Submitting...' : 'Post Verified Review'}
           </button>
         </form>
       )}
 
-      <div className="reviews-cards-grid">
+      <div className="reviews-grid">
         {ratings.map(r => (
-          <div key={r._id} className="review-card">
-            <div className="review-card-top">
+          <div key={r._id} className="pro-review-card">
+            <div className="review-card-header-row">
               <div>
-                <strong className="reviewer-name">{r.userName}</strong>
-                <span className="reviewed-ngo-name">for {r.ngoName || 'Verified NGO'}</span>
+                <strong className="reviewer-name-text">{r.userName}</strong>
+                <span className="reviewed-ngo-tag">for {r.ngoName || 'Verified NGO'}</span>
               </div>
-              <div className="review-stars-pill">
-                {'★'.repeat(r.rating)}{'☆'.repeat(Math.max(0, 5 - r.rating))}
-              </div>
+              <span className="stars-gold-pill">★ {r.rating}.0</span>
             </div>
-            <p className="review-body">"{r.review}"</p>
-            <div className="review-date">
-              {r.createdAt ? new Date(r.createdAt).toLocaleDateString() : 'Verified Review'}
+            <p className="review-comment-text">"{r.review}"</p>
+            <div className="review-date-stamp">
+              {r.createdAt ? new Date(r.createdAt).toLocaleDateString() : 'Verified Submission'}
             </div>
           </div>
         ))}

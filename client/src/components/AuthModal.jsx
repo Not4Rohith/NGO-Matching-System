@@ -9,26 +9,13 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }) {
 
   if (!isOpen) return null;
 
-  const handleDemoLogin = (demoRole) => {
-    let mockUser;
-    if (demoRole === 'citizen') {
-      mockUser = { id: 'usr_demo_1', name: 'Aarav Sharma', email: 'aarav@citizen.org', role: 'citizen' };
-    } else if (demoRole === 'ngo') {
-      mockUser = { id: 'usr_demo_2', name: 'Priya Deshmukh', email: 'priya@goonj.org', role: 'ngo', organizationName: 'Goonj Relief' };
-    } else {
-      mockUser = { id: 'usr_demo_3', name: 'Admin Coordinator', email: 'admin@reliefhub.org', role: 'admin' };
-    }
-    onLoginSuccess(mockUser);
-    onClose();
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!email || !password) return;
+    if (!email.trim() || !password.trim()) return;
     const user = {
       id: 'usr_' + Date.now(),
-      name: name || email.split('@')[0],
-      email,
+      name: name.trim() || email.split('@')[0],
+      email: email.trim(),
       role
     };
     onLoginSuccess(user);
@@ -36,56 +23,24 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }) {
   };
 
   return (
-    <div className="modal-backdrop" onClick={onClose}>
-      <div className="modal-dialog-card auth-modal-card" onClick={e => e.stopPropagation()}>
-        <button type="button" className="modal-close-btn" onClick={onClose}>✕</button>
+    <div className="modal-backdrop-clean" onClick={onClose}>
+      <div className="auth-dialog-card" onClick={e => e.stopPropagation()}>
+        <button type="button" className="modal-dismiss-btn" onClick={onClose}>✕</button>
 
-        <div className="auth-modal-header">
-          <div className="auth-icon">🔐</div>
-          <h3>{isRegister ? 'Create ReliefHub Account' : 'Sign in to ReliefHub'}</h3>
-          <p>Join the humanitarian aid matching network</p>
+        <div className="auth-card-header">
+          <div className="auth-leaf-icon">🌿</div>
+          <h3>{isRegister ? 'Create an Account' : 'Sign in to ReliefNet'}</h3>
+          <p>Access your submitted requests and organization dashboards</p>
         </div>
 
-        {/* Demo Fast Login Pills */}
-        <div className="demo-login-strip">
-          <span className="demo-strip-label">Fast Demo Logins:</span>
-          <div className="demo-chips-grid">
-            <button
-              type="button"
-              className="demo-chip-btn"
-              onClick={() => handleDemoLogin('citizen')}
-            >
-              👤 Citizen User
-            </button>
-            <button
-              type="button"
-              className="demo-chip-btn"
-              onClick={() => handleDemoLogin('ngo')}
-            >
-              🏢 NGO Coordinator
-            </button>
-            <button
-              type="button"
-              className="demo-chip-btn"
-              onClick={() => handleDemoLogin('admin')}
-            >
-              🛡️ Platform Admin
-            </button>
-          </div>
-        </div>
-
-        <div className="auth-divider">
-          <span>or continue with email</span>
-        </div>
-
-        <form className="auth-form" onSubmit={handleSubmit}>
+        <form className="auth-form-content" onSubmit={handleSubmit}>
           {isRegister && (
-            <div className="form-group">
-              <label>Full Name:</label>
+            <div className="form-field">
+              <label>Full Name *</label>
               <input
                 type="text"
-                className="form-input"
-                placeholder="e.g., Rohan Vernekar"
+                className="input-control"
+                placeholder="Your full name"
                 value={name}
                 onChange={e => setName(e.target.value)}
                 required
@@ -93,23 +48,23 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }) {
             </div>
           )}
 
-          <div className="form-group">
-            <label>Email Address:</label>
+          <div className="form-field">
+            <label>Email Address *</label>
             <input
               type="email"
-              className="form-input"
-              placeholder="name@example.com"
+              className="input-control"
+              placeholder="name@organization.org"
               value={email}
               onChange={e => setEmail(e.target.value)}
               required
             />
           </div>
 
-          <div className="form-group">
-            <label>Password:</label>
+          <div className="form-field">
+            <label>Password *</label>
             <input
               type="password"
-              className="form-input"
+              className="input-control"
               placeholder="••••••••"
               value={password}
               onChange={e => setPassword(e.target.value)}
@@ -118,30 +73,40 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }) {
           </div>
 
           {isRegister && (
-            <div className="form-group">
-              <label>Role:</label>
+            <div className="form-field">
+              <label>Account Type *</label>
               <select
-                className="form-select"
+                className="input-control select-control"
                 value={role}
                 onChange={e => setRole(e.target.value)}
               >
                 <option value="citizen">Citizen / Aid Requester</option>
                 <option value="ngo">NGO Representative</option>
-                <option value="admin">Administrator</option>
+                <option value="coordinator">Emergency Coordinator</option>
               </select>
             </div>
           )}
 
-          <button type="submit" className="btn-primary auth-submit-btn">
+          <button type="submit" className="btn-primary-green auth-action-btn">
             {isRegister ? 'Register Account' : 'Sign In'}
           </button>
         </form>
 
-        <div className="auth-switch-text">
+        <div className="auth-toggle-footer">
           {isRegister ? (
-            <>Already have an account? <span onClick={() => setIsRegister(false)}>Sign In</span></>
+            <p>
+              Already have an account?{' '}
+              <button type="button" className="auth-link-button" onClick={() => setIsRegister(false)}>
+                Sign In
+              </button>
+            </p>
           ) : (
-            <>Need an account? <span onClick={() => setIsRegister(true)}>Register</span></>
+            <p>
+              Don't have an account?{' '}
+              <button type="button" className="auth-link-button" onClick={() => setIsRegister(true)}>
+                Register
+              </button>
+            </p>
           )}
         </div>
       </div>

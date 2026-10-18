@@ -4,7 +4,6 @@ import Hero from './components/Hero';
 import AidRequestForm from './components/AidRequestForm';
 import NGODirectory from './components/NGODirectory';
 import RequestTracker from './components/RequestTracker';
-import AIMatcherPlayground from './components/AIMatcherPlayground';
 import RatingsSection from './components/RatingsSection';
 import AuthModal from './components/AuthModal';
 import Footer from './components/Footer';
@@ -13,10 +12,6 @@ import './App.css';
 
 function App() {
   const [activeTab, setActiveTab] = useState('overview');
-  const [theme, setTheme] = useState(() => {
-    return localStorage.getItem('ngo_theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-  });
-
   const [user, setUser] = useState(() => api.getCurrentUser());
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [ngos, setNgos] = useState([]);
@@ -28,17 +23,7 @@ function App() {
   const [reviewScore, setReviewScore] = useState(5);
   const [reviewComment, setReviewComment] = useState('');
 
-  // Sync theme to root DOM
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('ngo_theme', theme);
-  }, [theme]);
-
-  const toggleTheme = () => {
-    setTheme(prev => (prev === 'dark' ? 'light' : 'dark'));
-  };
-
-  // Load initial dataset from backend API or local storage
+  // Load dataset from backend API or local storage fallback
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -94,16 +79,13 @@ function App() {
       aidRequestId: reviewModalTarget.reqId
     });
     setReviewModalTarget(null);
-    alert('Thank you! Your feedback review has been registered.');
   };
 
   return (
-    <>
+    <div className="app-shell">
       <Navbar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
-        theme={theme}
-        toggleTheme={toggleTheme}
         user={user}
         onOpenAuth={() => setIsAuthOpen(true)}
         onLogout={() => {
@@ -112,7 +94,7 @@ function App() {
         }}
       />
 
-      <main className="main-content">
+      <main className="content-area">
         {activeTab === 'overview' && (
           <>
             <Hero
@@ -123,8 +105,8 @@ function App() {
                 totalRequests: requests.length
               }}
             />
-            <div className="ticks"></div>
-            <div style={{ marginTop: '32px' }}>
+            <div className="featured-ngos-section">
+              <div className="section-divider"></div>
               <NGODirectory
                 ngos={ngos.slice(0, 6)}
                 onDirectRequest={handleDirectRequest}
@@ -155,10 +137,6 @@ function App() {
           />
         )}
 
-        {activeTab === 'matcher-demo' && (
-          <AIMatcherPlayground />
-        )}
-
         {activeTab === 'reviews' && (
           <RatingsSection
             ratings={ratings}
@@ -170,61 +148,61 @@ function App() {
 
       <Footer />
 
-      {/* Review Modal for Resolved Requests */}
+      {/* Review Feedback Modal */}
       {reviewModalTarget && (
-        <div className="modal-backdrop" onClick={() => setReviewModalTarget(null)}>
-          <div className="modal-dialog-card" onClick={e => e.stopPropagation()}>
+        <div className="modal-backdrop-clean" onClick={() => setReviewModalTarget(null)}>
+          <div className="modal-card-pro" onClick={e => e.stopPropagation()}>
             <button
               type="button"
-              className="modal-close-btn"
+              className="modal-dismiss-btn"
               onClick={() => setReviewModalTarget(null)}
             >
               ✕
             </button>
-            <div className="modal-header">
+            <div className="modal-top-section">
               <h3>Rate & Review {reviewModalTarget.ngo.name}</h3>
-              <p>How was their assistance and turnaround time for your request?</p>
+              <p>Share feedback on response velocity and assistance effectiveness.</p>
             </div>
-            <div className="modal-body">
-              <div className="form-group">
+            <div className="modal-content-section">
+              <div className="form-field">
                 <label>Rating (1 to 5 Stars):</label>
-                <div className="star-picker-row">
+                <div className="star-selection-row">
                   {[1, 2, 3, 4, 5].map(star => (
                     <button
                       key={star}
                       type="button"
-                      className={`star-pick-btn ${reviewScore >= star ? 'active' : ''}`}
+                      className={`star-select-btn ${reviewScore >= star ? 'active' : ''}`}
                       onClick={() => setReviewScore(star)}
                     >
                       ★
                     </button>
                   ))}
-                  <span className="star-val-text">{reviewScore} / 5 Stars</span>
+                  <span className="star-selection-label">{reviewScore} of 5 Stars</span>
                 </div>
               </div>
 
-              <div className="form-group">
-                <label>Review Feedback:</label>
+              <div className="form-field">
+                <label>Feedback Comments:</label>
                 <textarea
-                  className="form-textarea"
+                  className="input-control textarea-control"
                   rows="3"
-                  placeholder="Share details of how the relief materials or volunteers arrived..."
+                  placeholder="Describe your experience with the response team..."
                   value={reviewComment}
                   onChange={e => setReviewComment(e.target.value)}
                 ></textarea>
               </div>
             </div>
-            <div className="modal-footer">
+            <div className="modal-actions-footer">
               <button
                 type="button"
-                className="btn-secondary"
+                className="btn-card-secondary"
                 onClick={() => setReviewModalTarget(null)}
               >
-                Skip for now
+                Cancel
               </button>
               <button
                 type="button"
-                className="btn-primary"
+                className="btn-card-primary"
                 onClick={handleSaveResolutionReview}
               >
                 Submit Feedback
@@ -234,7 +212,7 @@ function App() {
         </div>
       )}
 
-      {/* Authentication Modal */}
+      {/* Auth Modal */}
       <AuthModal
         isOpen={isAuthOpen}
         onClose={() => setIsAuthOpen(false)}
@@ -243,7 +221,7 @@ function App() {
           setUser(loggedUser);
         }}
       />
-    </>
+    </div>
   );
 }
 

@@ -1,66 +1,55 @@
 import React from 'react';
-import heroImg from '../assets/hero.png';
-import reactLogo from '../assets/react.svg';
-import viteLogo from '../assets/vite.svg';
 
 export default function Hero({ onPostRequest, onExploreDirectory, stats }) {
   return (
-    <section className="hero-section">
-      <div className="hero-badge">
-        <span className="pulse-dot"></span>
-        AI-Powered Humanitarian Matcher & Emergency Relief
+    <section className="hero-pro-section">
+      <div className="hero-badge-pill">
+        <span className="hero-badge-dot"></span>
+        Certified NGO Emergency & Humanitarian Platform
       </div>
 
-      <div className="hero-graphics">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="Relief Network Illustration" />
-          <img src={reactLogo} className="framework" alt="React 19" />
-          <img src={viteLogo} className="vite" alt="Vite 8" />
-        </div>
-      </div>
-
-      <h1 className="hero-title">
-        Connecting Urgent Aid with Verified NGOs
+      <h1 className="hero-headline">
+        Direct Aid Delivery & Verified NGO Assistance
       </h1>
 
-      <p className="hero-description">
-        ReliefHub bridges citizens in distress and specialized NGOs through intelligent
-        NLP text parsing and multi-factor recommendation algorithms. Fast, transparent, and built for emergency response.
+      <p className="hero-subhead">
+        Submit emergency aid requests and get matched with verified non-profit organizations
+        specializing in disaster response, healthcare, food security, education, and social welfare.
       </p>
 
-      <div className="hero-cta-group">
+      <div className="hero-button-group">
         <button
           type="button"
-          className="btn-primary cta-btn"
+          className="btn-primary-green hero-btn"
           onClick={onPostRequest}
         >
-          📢 Post Emergency Aid Request
+          Post Aid Request
         </button>
         <button
           type="button"
-          className="btn-secondary cta-btn"
+          className="btn-outline-green hero-btn"
           onClick={onExploreDirectory}
         >
-          🏢 Explore 25+ Verified NGOs
+          Explore NGO Directory
         </button>
       </div>
 
-      <div className="stats-grid">
-        <div className="stat-card">
-          <div className="stat-number">{stats.totalNGOs || 25}+</div>
-          <div className="stat-label">Verified Organizations</div>
+      <div className="hero-metrics-grid">
+        <div className="metric-box">
+          <div className="metric-value">{stats.totalNGOs || 25}+</div>
+          <div className="metric-name">Verified Partner NGOs</div>
         </div>
-        <div className="stat-card">
-          <div className="stat-number">{stats.totalRequests || 48}+</div>
-          <div className="stat-label">Aid Cases Processed</div>
+        <div className="metric-box">
+          <div className="metric-value">{stats.totalRequests || 40}+</div>
+          <div className="metric-name">Aid Requests Managed</div>
         </div>
-        <div className="stat-card">
-          <div className="stat-number">98.4%</div>
-          <div className="stat-label">NLP Match Accuracy</div>
+        <div className="metric-box">
+          <div className="metric-value">98.5%</div>
+          <div className="metric-name">Assistance Reliability</div>
         </div>
-        <div className="stat-card">
-          <div className="stat-number">&lt; 15m</div>
-          <div className="stat-label">Avg Response Velocity</div>
+        <div className="metric-box">
+          <div className="metric-value">24/7</div>
+          <div className="metric-name">Emergency Response</div>
         </div>
       </div>
     </section>
