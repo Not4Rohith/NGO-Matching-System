@@ -125,7 +125,8 @@ const jsFallbackMatcher = (requestData, topK = 5) => {
 const matchAidRequest = async (requestData, topK = 5) => {
   return new Promise((resolve) => {
     const payload = JSON.stringify(requestData).replace(/"/g, '\\"');
-    const command = `python "${PREDICT_SCRIPT}" "${payload}"`;
+    const pyCmd = process.platform === 'win32' ? 'python' : 'python3';
+    const command = `${pyCmd} "${PREDICT_SCRIPT}" "${payload}"`;
 
     exec(command, { timeout: 4000 }, (error, stdout) => {
       if (!error && stdout) {

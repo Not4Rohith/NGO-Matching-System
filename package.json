@@ -1,0 +1,13 @@
+{
+  "name": "reliefnet-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ReliefNet - Intelligent NGO Aid Request & Matching Platform",
+  "scripts": {
+    "build": "npm run build --prefix client",
+    "install:all": "npm install --prefix client && npm install --prefix server",
+    "start": "npm start --prefix server",
+    "server": "npm start --prefix server",
+    "client": "npm run dev --prefix client"
+  }
+}

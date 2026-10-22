@@ -162,5 +162,42 @@ Tested on diverse real-world emergency scenarios:
 
 ---
 
+## 🌐 Cloud Deployment (Vercel & Render)
+
+This project is pre-configured for automated deployment on **Vercel** (Frontend) and **Render** (Backend API).
+
+### 1. Deploy Frontend on Vercel
+1. Log in to [Vercel](https://vercel.com/) and click **"Add New..."** &rarr; **"Project"**.
+2. Import the GitHub repository: `RohithSV2/NGO`.
+3. In Project Settings:
+   - **Framework Preset**: Vite (detected automatically).
+   - **Root Directory**: `client` (or leave root as `vercel.json` handles monorepo build).
+   - **Build Command**: `npm run build`
+   - **Output Directory**: `dist`
+4. *(Optional)* In **Environment Variables**, add:
+   - `VITE_API_BASE_URL`: Your deployed Render backend URL (e.g. `https://reliefnet-backend.onrender.com/api`).
+5. Click **"Deploy"**.
+
+---
+
+### 2. Deploy Backend on Render
+1. Log in to [Render](https://dashboard.render.com/).
+2. Click **"New +"** &rarr; **"Blueprint"** and select `RohithSV2/NGO`.
+   - Render will detect [`render.yaml`](render.yaml) and configure the Node.js web service automatically.
+3. *(Alternative manual setup)*:
+   - Click **"New +"** &rarr; **"Web Service"** &rarr; select `RohithSV2/NGO`.
+   - **Root Directory**: `server`
+   - **Runtime**: Node
+   - **Build Command**: `npm install`
+   - **Start Command**: `npm start`
+   - **Health Check Path**: `/api/health`
+4. Add Environment Variables:
+   - `NODE_ENV`: `production`
+   - `JWT_SECRET`: Any secure random secret key.
+   - `MONGO_URI`: *(Optional)* Your MongoDB Atlas URI. If omitted, the server runs with built-in in-memory persistence.
+5. Click **"Create Web Service"**.
+
+---
+
 ## 📄 License
 This project is open-source and available under the [ISC License](LICENSE).

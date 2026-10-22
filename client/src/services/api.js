@@ -1,6 +1,10 @@
 import { INITIAL_NGOS, INITIAL_REQUESTS, INITIAL_RATINGS } from '../data/mockData';
 
-const API_BASE = 'http://localhost:5000/api';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || (
+  typeof window !== 'undefined' && window.location.hostname !== 'localhost'
+    ? '/api'
+    : 'http://localhost:5000/api'
+);
 
 // Local storage keys
 const STORAGE_REQUESTS = 'ngo_app_requests';
